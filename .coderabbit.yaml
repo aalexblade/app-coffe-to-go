@@ -1,0 +1,18 @@
+# .coderabbit.yaml
+version: "2"
+reviews:
+  profile: "production"
+  languages:
+    typescript:
+      strict_mode: true
+  tools:
+    linter:
+      enabled: true
+    biometrics:
+      enabled: false
+  # Focus code review on architectural integrity and Tailwind v4 patterns
+  prompt: |
+    You are reviewing a premium luxury coffee-to-go landing page. 
+    Ensure all components follow Atomic Design principles and use Tailwind CSS v4 variables properly.
+    All code comments must be in English. 
+    Do not flag hardcoded English strings as bugs, as localization to Ukrainian will be added later.

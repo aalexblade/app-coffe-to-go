@@ -1,15 +1,27 @@
-import React from 'react';
+import React from "react";
+import { Hero } from "./components/sections/Hero";
+import { Storytelling } from "./components/sections/Storytelling";
+import { InteractiveMenu } from "./components/sections/InteractiveMenu";
+import { OnlineOrder } from "./components/sections/OnlineOrder"; 
+import { CartProvider } from "./context/CartProvider";
 
 const App: React.FC = () => {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-luxury-dark px-4 text-center">
-      <h1 className="font-display text-5xl font-light tracking-wide text-luxury-gold md:text-7xl">
-        KAFFA 2026
-      </h1>
-      <p className="mt-4 font-sans text-sm tracking-widest text-luxury-clay uppercase">
-        Преміальна кава крізь вікно • Скоро відкриття
-      </p>
-    </div>
+    <CartProvider>
+      <main className="min-h-screen bg-luxury-dark text-white selection:bg-luxury-gold selection:text-luxury-dark">
+        {/* Cinematic intro with video background */}
+        <Hero />
+        
+        {/* Sourcing and concept narration */}
+        <Storytelling />
+        
+        {/* Animated menu categories */}
+        <InteractiveMenu />
+        
+        {/* Seamless checkout & pickup time scheduling */}
+        <OnlineOrder />
+      </main>
+    </CartProvider>
   );
 };
 
