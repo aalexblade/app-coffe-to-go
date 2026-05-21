@@ -100,7 +100,7 @@ const MenuCard: React.FC<{ item: MenuItem; onAdd: () => void }> = ({ item, onAdd
         <img 
           src={item.image} 
           alt={item.name}
-          className="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+          className="w-full h-full object-cover grayscale-20 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
         />
         <div className="absolute inset-0 bg-linear-to-t from-luxury-card via-transparent to-transparent opacity-60" />
       </div>
@@ -122,7 +122,7 @@ const MenuCard: React.FC<{ item: MenuItem; onAdd: () => void }> = ({ item, onAdd
 
         <button
           onClick={onAdd}
-          className="flex items-center gap-2 text-xs font-bold tracking-[0.2em] uppercase text-white group/btn"
+          className="flex items-center gap-2 text-xs font-bold tracking-ritual uppercase text-white group/btn"
         >
           <span className="relative">
             Add to Order

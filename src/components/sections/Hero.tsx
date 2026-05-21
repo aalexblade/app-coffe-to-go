@@ -42,7 +42,7 @@ export const Hero: React.FC = () => {
           muted
           loop
           playsInline
-          className="h-full w-full object-cover opacity-60 grayscale-[0.2]"
+          className="h-full w-full object-cover opacity-60 grayscale-20"
           poster="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80&w=1920"
         >
           <source
@@ -63,14 +63,14 @@ export const Hero: React.FC = () => {
       >
         <motion.span
           variants={itemVariants}
-          className="mb-4 text-sm font-medium tracking-[0.3em] uppercase text-luxury-gold/80"
+          className="mb-4 text-sm font-medium tracking-premium uppercase text-luxury-gold/80"
         >
           Premium Coffee Experience
         </motion.span>
 
         <motion.h1
           variants={itemVariants}
-          className="font-display text-5xl md:text-7xl lg:text-8xl xl:text-9xl leading-[1.1] tracking-tight text-white"
+          className="font-display text-5xl md:text-7xl lg:text-8xl xl:text-9xl leading-ritual tracking-tight text-white"
         >
           Elevate Your <br />
           <span className="text-luxury-gold italic">Morning Ritual</span>

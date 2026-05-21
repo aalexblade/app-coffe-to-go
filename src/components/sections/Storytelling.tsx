@@ -44,7 +44,7 @@ export const Storytelling: React.FC = () => {
           <img
             src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&q=80&w=1200"
             alt="Cinematic coffee brewing"
-            className="h-full w-full object-cover opacity-80 grayscale-[0.1] transition-transform duration-2000 hover:scale-105"
+            className="h-full w-full object-cover opacity-80 grayscale-10 transition-transform duration-2000 hover:scale-105"
           />
           {/* Subtle gradient overlay using modern v4 bg-linear syntax */}
           <div className="absolute inset-0 bg-linear-to-t from-luxury-dark via-transparent to-transparent opacity-60" />
@@ -58,7 +58,7 @@ export const Storytelling: React.FC = () => {
           viewport={{ once: true, margin: "-100px" }}
           className="flex flex-col justify-center space-y-6"
         >
-          <span className="text-sm font-medium tracking-[0.2em] uppercase text-luxury-gold">
+          <span className="text-sm font-medium tracking-ritual uppercase text-luxury-gold">
             The Bean & The Craft
           </span>
           

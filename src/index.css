@@ -9,6 +9,10 @@
 
   --font-sans: "Inter", sans-serif;
   --font-display: "Playfair Display", serif;
+
+  --tracking-ritual: 0.2em;
+  --tracking-premium: 0.3em;
+  --leading-ritual: 1.1;
 }
 
 body {

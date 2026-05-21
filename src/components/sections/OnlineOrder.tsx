@@ -42,7 +42,7 @@ export const OnlineOrder: React.FC = () => {
         
         {/* Section Header */}
         <div className="mb-16 text-center">
-          <span className="text-sm font-medium tracking-[0.2em] uppercase text-luxury-gold">
+          <span className="text-sm font-medium tracking-ritual uppercase text-luxury-gold">
             Your Order
           </span>
           <h2 className="font-display text-4xl md:text-5xl font-light text-white mt-2">
@@ -57,10 +57,10 @@ export const OnlineOrder: React.FC = () => {
             animate={{ opacity: 1, scale: 1 }}
             className="mx-auto max-w-md bg-luxury-card border border-luxury-gold/20 rounded-2xl p-8 text-center flex flex-col items-center justify-center space-y-4"
           >
-            <CheckCircle className="h-16 w-16 text-luxury-gold stroke-[1px]" />
+            <CheckCircle className="h-16 w-16 text-luxury-gold stroke-1" />
             <h3 className="font-display text-2xl text-white">Order Confirmed</h3>
             <p className="font-sans text-sm text-white/70 font-light leading-relaxed">
-              Thank you, {name}. Your artisanal espresso extraction is scheduled for <span className="text-luxury-gold font-medium">{pickupTime}</span>. 
+              Thank you, {name}. Your espresso extraction is scheduled for <span className="text-luxury-gold font-medium">{pickupTime}</span>. 
               Please present your name at the window.
             </p>
           </motion.div>
@@ -72,7 +72,7 @@ export const OnlineOrder: React.FC = () => {
             animate="visible"
             className="flex flex-col items-center justify-center text-center py-20 space-y-4 bg-luxury-card/30 rounded-2xl border border-white/5"
           >
-            <ShoppingBag className="h-12 w-12 text-luxury-clay opacity-40 stroke-[1px]" />
+            <ShoppingBag className="h-12 w-12 text-luxury-clay opacity-40 stroke-1" />
             <p className="font-display text-xl text-white/60 italic">Your premium cup is currently empty.</p>
             <p className="font-sans text-xs text-luxury-clay max-w-xs uppercase tracking-widest">
               Explore the menu above to select your single-origin extraction.
@@ -106,7 +106,7 @@ export const OnlineOrder: React.FC = () => {
                         className="text-white/40 hover:text-red-400 transition-colors duration-200"
                         aria-label="Remove item"
                       >
-                        <Trash2 className="h-4 w-4 stroke-[1.5px]" />
+                        <Trash2 className="h-4 w-4 stroke-1.5" />
                       </button>
                     </div>
                   </motion.div>
