@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, type Variants } from 'framer-motion'; 
 import { ChevronDown } from 'lucide-react';
+import LocationStatus from '../ui/LocationStatus';
 
 /**
  * Hero component for the coffee-to-go window shop.
@@ -52,6 +53,11 @@ export const Hero: React.FC = () => {
         </video>
         {/* Luxury Dark Gradient Overlay using modern Tailwind v4 bg-linear syntax */}
         <div className="absolute inset-0 bg-linear-to-b from-luxury-dark/80 via-luxury-dark/40 to-luxury-dark" />
+      </div>
+
+      {/* Floating Status and Location */}
+      <div className="absolute top-8 left-6 md:left-12 z-20">
+        <LocationStatus />
       </div>
 
       {/* Content Layer */}

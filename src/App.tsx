@@ -3,6 +3,7 @@ import { Hero } from "./components/sections/Hero";
 import { Storytelling } from "./components/sections/Storytelling";
 import { InteractiveMenu } from "./components/sections/InteractiveMenu";
 import { OnlineOrder } from "./components/sections/OnlineOrder"; 
+import { LocationMap } from "./components/sections/LocationMap";
 import { CartProvider } from "./context/CartProvider";
 
 const App: React.FC = () => {
@@ -20,6 +21,9 @@ const App: React.FC = () => {
         
         {/* Seamless checkout & pickup time scheduling */}
         <OnlineOrder />
+
+        {/* Physical window coordinates and status */}
+        <LocationMap />
       </main>
     </CartProvider>
   );
