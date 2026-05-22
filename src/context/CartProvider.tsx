@@ -36,6 +36,18 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
+  const decrementQuantity = (id: string) => {
+    setCart((prevCart) => {
+      const existingItem = prevCart.find((item) => item.id === id);
+      if (existingItem && existingItem.quantity > 1) {
+        return prevCart.map((item) =>
+          item.id === id ? { ...item, quantity: item.quantity - 1 } : item
+        );
+      }
+      return prevCart.filter((item) => item.id !== id);
+    });
+  };
+
   const removeFromCart = (id: string) => {
     setCart((prevCart) => prevCart.filter((item) => item.id !== id));
   };
@@ -55,6 +67,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const value = {
     cart,
     addToCart,
+    decrementQuantity,
     removeFromCart,
     clearCart,
     totalPrice,

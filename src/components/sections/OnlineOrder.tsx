@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { useCart } from '../../hooks/useCart';
-import { ShoppingBag, Trash2, Clock, User, Phone, CheckCircle } from 'lucide-react';
+import { ShoppingBag, Trash2, Clock, User, Phone, CheckCircle, Minus, Plus } from 'lucide-react';
 
 /**
  * OnlineOrder component handles the shopping cart display and simulated checkout.
  * Features scheduling for pickup times, critical for coffee-to-go window operations.
  */
 export const OnlineOrder: React.FC = () => {
-  const { cart, removeFromCart, clearCart, totalPrice, totalItems } = useCart();
+  const { cart, addToCart, decrementQuantity, removeFromCart, clearCart, totalPrice, totalItems } = useCart();
   
   // Form states
   const [name, setName] = useState('');
@@ -95,9 +95,30 @@ export const OnlineOrder: React.FC = () => {
                     exit={{ opacity: 0, x: 20 }}
                     className="flex items-center justify-between p-5 bg-luxury-card border border-white/5 rounded-xl transition-all hover:border-white/10"
                   >
-                    <div className="space-y-1">
+                    <div className="space-y-1.5">
                       <h4 className="font-display text-lg text-white font-light">{item.name}</h4>
-                      <p className="font-sans text-xs text-luxury-clay tracking-wider uppercase">Qty: {item.quantity} × {item.price} UAH</p>
+                      <div className="flex items-center space-x-3">
+                        <div className="flex items-center bg-luxury-dark/50 border border-white/10 rounded-lg overflow-hidden">
+                          <button
+                            onClick={() => decrementQuantity(item.id)}
+                            className="p-1.5 text-white/40 hover:text-luxury-gold hover:bg-white/5 transition-all duration-200 cursor-pointer"
+                            aria-label="Decrease quantity"
+                          >
+                            <Minus className="h-3 w-3" />
+                          </button>
+                          <span className="font-sans text-xs text-white/80 px-2 min-w-[1.2rem] text-center border-x border-white/5">
+                            {item.quantity}
+                          </span>
+                          <button
+                            onClick={() => addToCart(item)}
+                            className="p-1.5 text-white/40 hover:text-luxury-gold hover:bg-white/5 transition-all duration-200 cursor-pointer"
+                            aria-label="Increase quantity"
+                          >
+                            <Plus className="h-3 w-3" />
+                          </button>
+                        </div>
+                        <p className="font-sans text-xs text-luxury-clay tracking-wider uppercase">× {item.price} UAH</p>
+                      </div>
                     </div>
                     <div className="flex items-center space-x-6">
                       <span className="font-sans text-base text-luxury-gold font-light">{item.price * item.quantity} UAH</span>

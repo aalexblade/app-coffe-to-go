@@ -9,6 +9,7 @@ export interface CartItem extends MenuItem {
 export interface CartContextType {
   cart: CartItem[];
   addToCart: (item: MenuItem) => void;
+  decrementQuantity: (id: string) => void;
   removeFromCart: (id: string) => void;
   clearCart: () => void;
   totalPrice: number;
