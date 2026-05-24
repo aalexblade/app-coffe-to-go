@@ -66,6 +66,13 @@ export const translations = {
       address: "Sofiivska St, 23, Kyiv, 01001",
       dispatchHours: "Dispatch Hours",
       openInMaps: "Open in Google Maps",
+      // New clean synchronized architecture tokens
+      description: "Visit our minimalist extraction window nestled in the heart of the city. Experience elite espresso brewing crafted for modern movement.",
+      addressTitle: "Coordinates",
+      addressValue: "Mazepy Ave, Vyshhorod, Kyiv Oblast, 07300",
+      hoursTitle: "Dispatch Window",
+      hoursValue: "Mon - Sun: 08:00 - 20:00",
+      phoneTitle: "Hotline Sequence",
     },
     menuItems: {
       e1: {
@@ -163,6 +170,13 @@ export const translations = {
       address: "вул. Софіївська, 23, Київ, 01001",
       dispatchHours: "Години роботи",
       openInMaps: "Відкрити в Google Maps",
+      // New clean synchronized architecture tokens
+      description: "Завітайте до нашого мінімалістичного вікна екстракції кави в самому серці міста. Відчуйте елітне заварювання еспресо, створене для сучасного міського руху.",
+      addressTitle: "Координати",
+      addressValue: "проспект Мазепи, Вишгород, Київська область, 07300",
+      hoursTitle: "Вікно видачі",
+      hoursValue: "Пн - Нд: 08:00 - 20:00",
+      phoneTitle: "Гаряча лінія",
     },
     menuItems: {
       e1: {
@@ -197,15 +211,8 @@ export const translations = {
   },
 };
 
-/**
- * Ensures TranslationKeys points accurately to the structure of the English locale.
- */
 export type TranslationKeys = typeof translations.en;
 
-/**
- * Generates dot-notation string paths directly from the TranslationKeys structure.
- * This ensures full autocompletion and compile-time validation for the `t()` function.
- */
 export type TranslationPath =
   | `common.${keyof TranslationKeys['common']}`
   | `hero.${keyof TranslationKeys['hero']}`

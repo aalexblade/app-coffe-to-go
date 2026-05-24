@@ -4,12 +4,11 @@ import { useLanguage } from '../../context/LangContext';
 
 /**
  * Storytelling section for the coffee-to-go window shop.
- * Showcases single-origin bean culture and window aesthetics using Tailwind v4 utilities.
+ * Standardized spacing applied for unified luxury vertical rhythm.
  */
 export const Storytelling: React.FC = () => {
   const { t } = useLanguage();
 
-  // Explicitly typing variants to ensure strict TypeScript compilation
   const textVariants: Variants = {
     hidden: { opacity: 0, y: 40 },
     visible: {
@@ -33,7 +32,10 @@ export const Storytelling: React.FC = () => {
   };
 
   return (
-    <section id="storytelling" className="relative min-h-screen w-full bg-luxury-dark py-24 px-6 md:px-12 lg:px-24">
+    <section 
+      id="storytelling" 
+      className="relative bg-luxury-dark py-20 md:py-32 px-6 md:px-12 lg:px-24"
+    >
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 md:grid-cols-2 md:items-center">
         
         {/* Cinematic Imagery Column */}
@@ -49,7 +51,6 @@ export const Storytelling: React.FC = () => {
             alt="Cinematic coffee brewing"
             className="h-full w-full object-cover opacity-80 grayscale-10 transition-transform duration-2000 hover:scale-105"
           />
-          {/* Subtle gradient overlay using modern v4 bg-linear syntax */}
           <div className="absolute inset-0 bg-linear-to-t from-luxury-dark via-transparent to-transparent opacity-60" />
         </motion.div>
 

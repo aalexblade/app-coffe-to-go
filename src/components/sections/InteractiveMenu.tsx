@@ -10,7 +10,7 @@ type Category = 'All' | 'Espresso' | 'Filter' | 'Signature' | 'Bakery';
 
 /**
  * InteractiveMenu component.
- * Displays a filtered grid of menu items with smooth transitions and luxury aesthetics.
+ * Displays a filtered grid of menu items with standardized layout padding.
  */
 export const InteractiveMenu: React.FC = () => {
   const { addToCart } = useCart();
@@ -24,7 +24,10 @@ export const InteractiveMenu: React.FC = () => {
     : MENU_ITEMS.filter(item => item.category === activeCategory);
 
   return (
-    <section id="menu" className="bg-luxury-dark py-24 md:py-32 px-6">
+    <section 
+      id="menu" 
+      className="bg-luxury-dark py-20 md:py-32 px-6 md:px-12 lg:px-24"
+    >
       <div className="container mx-auto">
         {/* Section Header */}
         <div className="mb-16 text-center">
@@ -100,17 +103,15 @@ const MenuCard: React.FC<{ item: MenuItem; onAdd: () => void }> = ({ item, onAdd
       transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
       className="group relative bg-luxury-card border border-white/5 overflow-hidden rounded-sm hover:border-luxury-gold/30 transition-colors duration-500"
     >
-      {/* Image Container */}
       <div className="aspect-4/3 overflow-hidden">
         <img 
           src={item.image} 
-          alt={item.name}
+          alt="Coffee selection"
           className="w-full h-full object-cover grayscale-20 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
         />
         <div className="absolute inset-0 bg-linear-to-t from-luxury-card via-transparent to-transparent opacity-60" />
       </div>
 
-      {/* Content */}
       <div className="p-8">
         <div className="flex justify-between items-start mb-2">
           <h3 className="font-display text-xl text-white group-hover:text-luxury-gold transition-colors duration-300">
@@ -141,4 +142,3 @@ const MenuCard: React.FC<{ item: MenuItem; onAdd: () => void }> = ({ item, onAdd
     </motion.div>
   );
 };
-

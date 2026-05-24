@@ -1,4 +1,3 @@
-// src/context/CartProvider.tsx
 import React, { useState, useEffect, useMemo } from 'react';
 import { CartContext, type CartItem } from './CartContext';
 import type { MenuItem } from '../config/menuData';
@@ -7,7 +6,7 @@ const LOCAL_STORAGE_KEY = 'kaffa_cart_state';
 
 /**
  * CartProvider component that handles state and exposes it through CartContext.
- * Exclusive component export satisfies Vite's strict Fast Refresh rules.
+ * Adheres to React 19 standard JSX context rendering.
  */
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [cart, setCart] = useState<CartItem[]>(() => {
@@ -74,5 +73,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     totalItems,
   };
 
-  return React.createElement(CartContext.Provider, { value }, children);
+  return (
+    <CartContext value={value}>
+      {children}
+    </CartContext>
+  );
 };
