@@ -1,6 +1,7 @@
 import React from 'react';
 import { MapPin } from 'lucide-react';
 import { useOpeningHours } from '../../hooks/useOpeningHours';
+import { useLanguage } from '../../context/LangContext';
 
 /**
  * LocationStatus component displays the physical address and the live shop status.
@@ -8,6 +9,7 @@ import { useOpeningHours } from '../../hooks/useOpeningHours';
  */
 const LocationStatus: React.FC = () => {
   const { isOpen, statusText } = useOpeningHours();
+  const { t } = useLanguage();
 
   return (
     <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8">
@@ -18,10 +20,10 @@ const LocationStatus: React.FC = () => {
         </div>
         <div className="flex flex-col">
           <span className="font-sans text-[10px] uppercase tracking-widest text-luxury-clay font-medium">
-            Location
+            {t("common.location")}
           </span>
           <span className="font-display text-sm text-white/90 font-light">
-            Sofiivska St, 23, Kyiv
+            {t("location.address").split(',').slice(0, 2).join(',')}
           </span>
         </div>
       </div>

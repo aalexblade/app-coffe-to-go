@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Clock, ExternalLink } from 'lucide-react';
 import { useOpeningHours } from '../../hooks/useOpeningHours';
+import { useLanguage } from '../../context/LangContext';
 
 /**
  * LocationMap component provides a full-screen map experience.
@@ -10,6 +11,7 @@ import { useOpeningHours } from '../../hooks/useOpeningHours';
  */
 export const LocationMap: React.FC = () => {
   const { scheduleText } = useOpeningHours();
+  const { t } = useLanguage();
   
   // Official Google Maps URL for the location
   const mapUrl = "https://www.google.com/maps/search/?api=1&query=50.452273,30.517453";
@@ -24,10 +26,10 @@ export const LocationMap: React.FC = () => {
         {/* Section Header */}
         <div className="mb-16 text-center">
           <span className="text-sm font-medium tracking-ritual uppercase text-luxury-gold">
-            Location
+            {t("location.badge")}
           </span>
           <h2 className="font-display text-4xl md:text-5xl font-light text-white mt-2">
-            Find the <span className="text-luxury-gold italic">Window</span>
+            {t("location.titlePart1")} <span className="text-luxury-gold italic">{t("location.titlePart2")}</span>
           </h2>
         </div>
 
@@ -61,8 +63,8 @@ export const LocationMap: React.FC = () => {
                   <MapPin className="h-5 w-5 stroke-[1.5]" />
                 </div>
                 <div>
-                  <h4 className="font-display text-xl text-white font-light">The Extraction Window</h4>
-                  <p className="font-sans text-sm text-luxury-clay mt-1">Sofiivska St, 23, Kyiv, 01001</p>
+                  <h4 className="font-display text-xl text-white font-light">{t("location.windowName")}</h4>
+                  <p className="font-sans text-sm text-luxury-clay mt-1">{t("location.address")}</p>
                 </div>
               </div>
 
@@ -71,7 +73,7 @@ export const LocationMap: React.FC = () => {
                   <Clock className="h-5 w-5 stroke-[1.5]" />
                 </div>
                 <div>
-                  <h4 className="font-sans text-xs font-semibold tracking-widest uppercase text-white/40">Dispatch Hours</h4>
+                  <h4 className="font-sans text-xs font-semibold tracking-widest uppercase text-white/40">{t("location.dispatchHours")}</h4>
                   <p className="font-sans text-sm text-white/80 mt-1">{scheduleText}</p>
                 </div>
               </div>
@@ -83,7 +85,7 @@ export const LocationMap: React.FC = () => {
                   rel="noopener noreferrer"
                   className="group flex items-center justify-center space-x-2 w-full bg-luxury-gold text-luxury-dark font-medium py-4 rounded-xl text-sm tracking-widest uppercase transition-all duration-300 hover:bg-white hover:shadow-lg hover:shadow-luxury-gold/5"
                 >
-                  <span>Open in Google Maps</span>
+                  <span>{t("location.openInMaps")}</span>
                   <ExternalLink className="h-4 w-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
                 </a>
               </div>
@@ -94,3 +96,4 @@ export const LocationMap: React.FC = () => {
     </section>
   );
 };
+

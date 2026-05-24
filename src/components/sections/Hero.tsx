@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, type Variants } from 'framer-motion'; 
 import { ChevronDown } from 'lucide-react';
+import { useLanguage } from '../../context/LangContext';
 import LocationStatus from '../ui/LocationStatus';
 
 /**
@@ -9,6 +10,8 @@ import LocationStatus from '../ui/LocationStatus';
  * Optimized for mobile and high-performance screens using Tailwind v4 syntax.
  */
 export const Hero: React.FC = () => {
+  const { t } = useLanguage();
+  
   // Explicitly typing variants to resolve TypeScript structure mismatch
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
@@ -71,23 +74,22 @@ export const Hero: React.FC = () => {
           variants={itemVariants}
           className="mb-4 text-sm font-medium tracking-premium uppercase text-luxury-gold/80"
         >
-          Premium Coffee Experience
+          {t("hero.premiumExperience")}
         </motion.span>
 
         <motion.h1
           variants={itemVariants}
           className="font-display text-5xl md:text-7xl lg:text-8xl xl:text-9xl leading-ritual tracking-tight text-white"
         >
-          Elevate Your <br />
-          <span className="text-luxury-gold italic">Morning Ritual</span>
+          {t("hero.elevateTitle")} <br />
+          <span className="text-luxury-gold italic">{t("hero.elevateSubtitle")}</span>
         </motion.h1>
 
         <motion.p
           variants={itemVariants}
           className="mt-8 max-w-xl text-lg md:text-xl text-white/70 font-light leading-relaxed"
         >
-          Artisanal coffee brewed to perfection, served from our window to your
-          hands. Experience the gold standard of on-the-go caffeine.
+          {t("hero.description")}
         </motion.p>
 
         <motion.div variants={itemVariants} className="mt-12">
@@ -99,7 +101,7 @@ export const Hero: React.FC = () => {
             }
             className="group relative flex items-center gap-3 overflow-hidden rounded-full border border-luxury-gold/30 bg-white/5 px-8 py-4 text-sm font-medium tracking-widest uppercase text-white backdrop-blur-md transition-all hover:bg-luxury-gold hover:text-luxury-dark"
           >
-            <span>Explore Our Story</span>
+            <span>{t("hero.exploreButton")}</span>
             <ChevronDown className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-1" />
           </button>
         </motion.div>
@@ -116,3 +118,4 @@ export const Hero: React.FC = () => {
     </section>
   );
 };
+

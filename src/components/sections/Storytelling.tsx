@@ -1,11 +1,14 @@
 import React from 'react';
 import { motion, type Variants } from 'framer-motion';
+import { useLanguage } from '../../context/LangContext';
 
 /**
  * Storytelling section for the coffee-to-go window shop.
  * Showcases single-origin bean culture and window aesthetics using Tailwind v4 utilities.
  */
 export const Storytelling: React.FC = () => {
+  const { t } = useLanguage();
+
   // Explicitly typing variants to ensure strict TypeScript compilation
   const textVariants: Variants = {
     hidden: { opacity: 0, y: 40 },
@@ -59,34 +62,30 @@ export const Storytelling: React.FC = () => {
           className="flex flex-col justify-center space-y-6"
         >
           <span className="text-sm font-medium tracking-ritual uppercase text-luxury-gold">
-            The Bean & The Craft
+            {t("story.badge")}
           </span>
           
           <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-light leading-tight text-white">
-            Single Origin. <br />
-            <span className="text-luxury-gold italic">Served Through a Window.</span>
+            {t("story.titlePart1")} <br />
+            <span className="text-luxury-gold italic">{t("story.titlePart2")}</span>
           </h2>
           
           <p className="font-sans text-base md:text-lg text-white/70 font-light leading-relaxed">
-            We source our beans directly from sustainable farms in Ethiopia and El Salvador. 
-            By utilizing micro-lot selections and meticulous anaerobic fermentation processing, 
-            every cup delivers tasting notes that challenge expectations.
+            {t("story.paragraph1")}
           </p>
 
           <p className="font-sans text-sm md:text-base text-luxury-clay font-light leading-relaxed">
-            Our window conceptualizes speed without sacrificing luxury. No indoor distractions—just 
-            uncompromising, artisanal coffee geometry engineered for city movement. Meet your barista, 
-            take your cup, and elevate your urban journey.
+            {t("story.paragraph2")}
           </p>
 
           <div className="pt-4 grid grid-cols-2 gap-4 border-t border-white/10">
             <div>
-              <h4 className="font-display text-xl font-medium text-luxury-gold">100%</h4>
-              <p className="text-xs tracking-wider uppercase text-white/50 mt-1">Arabica Specialty</p>
+              <h4 className="font-display text-xl font-medium text-luxury-gold">{t("story.arabicaSpecialty")}</h4>
+              <p className="text-xs tracking-wider uppercase text-white/50 mt-1">{t("story.specialtyLabel")}</p>
             </div>
             <div>
-              <h4 className="font-display text-xl font-medium text-luxury-gold">Micro</h4>
-              <p className="text-xs tracking-wider uppercase text-white/50 mt-1">Lot Sourcing</p>
+              <h4 className="font-display text-xl font-medium text-luxury-gold">{t("story.microLotSourcing")}</h4>
+              <p className="text-xs tracking-wider uppercase text-white/50 mt-1">{t("story.sourcingLabel")}</p>
             </div>
           </div>
         </motion.div>

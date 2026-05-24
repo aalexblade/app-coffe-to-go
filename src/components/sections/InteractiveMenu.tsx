@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Plus } from 'lucide-react';
 import { type MenuItem, MENU_ITEMS } from '../../config/menuData';
 import { useCart } from '../../hooks/useCart';
+import { useLanguage } from '../../context/LangContext';
+import type { TranslationPath } from '../../config/translations';
 
 type Category = 'All' | 'Espresso' | 'Filter' | 'Signature' | 'Bakery';
 
@@ -12,6 +14,7 @@ type Category = 'All' | 'Espresso' | 'Filter' | 'Signature' | 'Bakery';
  */
 export const InteractiveMenu: React.FC = () => {
   const { addToCart } = useCart();
+  const { t } = useLanguage();
   const [activeCategory, setActiveCategory] = useState<Category>('All');
 
   const categories: Category[] = ['All', 'Espresso', 'Filter', 'Signature', 'Bakery'];
@@ -31,7 +34,7 @@ export const InteractiveMenu: React.FC = () => {
             viewport={{ once: true }}
             className="font-display text-4xl md:text-6xl text-white tracking-tight"
           >
-            Curated <span className="text-luxury-gold italic">Selections</span>
+            {t("menu.title")} <span className="text-luxury-gold italic">{t("menu.subtitle")}</span>
           </motion.h2>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
@@ -40,7 +43,7 @@ export const InteractiveMenu: React.FC = () => {
             transition={{ delay: 0.1 }}
             className="mt-4 text-luxury-clay max-w-2xl mx-auto"
           >
-            Every brew and pastry is a testament to our dedication to the gold standard of coffee culture.
+            {t("menu.description")}
           </motion.p>
         </div>
 
@@ -54,7 +57,7 @@ export const InteractiveMenu: React.FC = () => {
                 activeCategory === category ? 'text-luxury-gold' : 'text-luxury-clay hover:text-white'
               }`}
             >
-              {category}
+              {t(`menu.categories.${category.toLowerCase() as any}` as any)}
               {activeCategory === category && (
                 <motion.div
                   layoutId="activeTab"
@@ -86,6 +89,8 @@ export const InteractiveMenu: React.FC = () => {
  * Individual Menu Card Component
  */
 const MenuCard: React.FC<{ item: MenuItem; onAdd: () => void }> = ({ item, onAdd }) => {
+  const { t } = useLanguage();
+  
   return (
     <motion.div
       layout
@@ -109,15 +114,15 @@ const MenuCard: React.FC<{ item: MenuItem; onAdd: () => void }> = ({ item, onAdd
       <div className="p-8">
         <div className="flex justify-between items-start mb-2">
           <h3 className="font-display text-xl text-white group-hover:text-luxury-gold transition-colors duration-300">
-            {item.name}
+            {t(`menuItems.${item.id}.name` as TranslationPath)}
           </h3>
           <span className="text-luxury-gold font-medium">
-            ${item.price.toFixed(2)}
+            {item.price.toFixed(2)} {t("common.uah")}
           </span>
         </div>
         
         <p className="text-sm text-luxury-clay leading-relaxed mb-8 line-clamp-2">
-          {item.description}
+          {t(`menuItems.${item.id}.description` as TranslationPath)}
         </p>
 
         <button
@@ -125,7 +130,7 @@ const MenuCard: React.FC<{ item: MenuItem; onAdd: () => void }> = ({ item, onAdd
           className="flex items-center gap-2 text-xs font-bold tracking-ritual uppercase text-white group/btn"
         >
           <span className="relative">
-            Add to Order
+            {t("menu.addToOrder")}
             <span className="absolute -bottom-1 left-0 w-0 h-px bg-luxury-gold group-hover/btn:w-full transition-all duration-300" />
           </span>
           <div className="flex items-center justify-center w-8 h-8 rounded-full border border-white/10 group-hover/btn:border-luxury-gold group-hover/btn:bg-luxury-gold group-hover/btn:text-luxury-dark transition-all duration-300">
@@ -136,3 +141,4 @@ const MenuCard: React.FC<{ item: MenuItem; onAdd: () => void }> = ({ item, onAdd
     </motion.div>
   );
 };
+
