@@ -88,15 +88,39 @@ export const InteractiveMenu: React.FC = () => {
 };
 
 /**
- * Individual Menu Card Component
+ * Individual Menu Card Component with Fly-to-Cart micro-interaction
  */
 const MenuCard: React.FC<{ item: MenuItem }> = ({ item }) => {
   const { t } = useLanguage();
   const { cart, addToCart, decrementQuantity } = useCart();
   
+  // Local state for "Fly-to-Cart" particles
+  const [particles, setParticles] = useState<{ id: number; x: number; y: number }[]>([]);
+
   // Extract active quantity from cart if item exists
   const cartItem = cart.find(i => i.id === item.id);
   const quantity = cartItem?.quantity || 0;
+
+  /**
+   * Spawns a flying particle from the click coordinates toward the floating cart trigger.
+   */
+  const handleAction = (e: React.MouseEvent, action: () => void) => {
+    if (typeof window === "undefined") {
+      action();
+      return;
+    }
+
+    const startX = e.clientX;
+    const startY = e.clientY;
+    const id = Date.now() + Math.random();
+
+    setParticles((prev) => [...prev, { id, x: startX, y: startY }]);
+    action();
+  };
+
+  const removeParticle = (id: number) => {
+    setParticles((prev) => prev.filter((p) => p.id !== id));
+  };
   
   return (
     <motion.div
@@ -107,6 +131,33 @@ const MenuCard: React.FC<{ item: MenuItem }> = ({ item }) => {
       transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
       className="group relative bg-luxury-card border border-white/5 overflow-hidden rounded-sm hover:border-luxury-gold/30 transition-colors duration-500"
     >
+      {/* Fly-to-Cart Particle Stream */}
+      <AnimatePresence>
+        {particles.map((particle) => (
+          <motion.div
+            key={particle.id}
+            initial={{ 
+              x: particle.x - 8, 
+              y: particle.y - 8, 
+              scale: 1, 
+              opacity: 1 
+            }}
+            animate={{ 
+              x: window.innerWidth - 64, 
+              y: window.innerHeight - 64, 
+              scale: 0.3, 
+              opacity: 0 
+            }}
+            transition={{ 
+              duration: 0.7, 
+              ease: [0.25, 1, 0.5, 1] 
+            }}
+            onAnimationComplete={() => removeParticle(particle.id)}
+            className="fixed top-0 left-0 w-4 h-4 bg-luxury-gold rounded-full z-50 pointer-events-none shadow-[0_0_10px_rgba(197,168,128,0.6)]"
+          />
+        ))}
+      </AnimatePresence>
+
       <div className="aspect-4/3 overflow-hidden">
         <img 
           src={item.image} 
@@ -138,7 +189,7 @@ const MenuCard: React.FC<{ item: MenuItem }> = ({ item }) => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              onClick={() => addToCart(item)}
+              onClick={(e) => handleAction(e, () => addToCart(item))}
               className="flex items-center gap-2 text-xs font-bold tracking-ritual uppercase text-white group/btn w-full text-left"
             >
               <span className="relative">
@@ -169,7 +220,7 @@ const MenuCard: React.FC<{ item: MenuItem }> = ({ item }) => {
               </span>
 
               <button 
-                onClick={() => addToCart(item)}
+                onClick={(e) => handleAction(e, () => addToCart(item))}
                 className="hover:text-luxury-gold transition-colors duration-200 cursor-pointer"
               >
                 <Plus size={14} />
