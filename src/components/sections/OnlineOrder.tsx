@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { useCart } from "../../hooks/useCart";
 import { useLanguage } from "../../context/LangContext";
@@ -13,11 +13,12 @@ import {
   CheckCircle,
   Minus,
   Plus,
+  Zap,
 } from "lucide-react";
 
 /**
  * OnlineOrder component handles the shopping cart and dispatch.
- * Optimized with standardized section padding and layout rhythm.
+ * Optimized with a high-end Luxury Time Picker for pickup scheduling.
  */
 export const OnlineOrder: React.FC = () => {
   const {
@@ -38,6 +39,78 @@ export const OnlineOrder: React.FC = () => {
   const [isOrdered, setIsOrdered] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Generate dynamic time slots for business hours (08:00 - 20:00)
+  const timeSlots = useMemo(() => {
+    const slots: string[] = [];
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinutes = now.getMinutes();
+
+    let startHour = 8;
+    let startMinute = 0;
+
+    // Check if within business hours (08:00 - 20:00)
+    const isWithinHours = currentHour >= 8 && currentHour < 20;
+
+    if (isWithinHours) {
+      // Round to next 15-minute interval
+      startMinute = Math.ceil(currentMinutes / 15) * 15;
+      startHour = currentHour;
+      
+      if (startMinute >= 60) {
+        startHour += 1;
+        startMinute = 0;
+      }
+      
+      // If rounding pushed us to/past closing time, fallback to next day (full sequence)
+      if (startHour >= 20) {
+        startHour = 8;
+        startMinute = 0;
+      }
+    }
+
+    const iter = new Date();
+    iter.setHours(startHour, startMinute, 0, 0);
+
+    const end = new Date();
+    end.setHours(20, 0, 0, 0);
+
+    while (iter <= end) {
+      slots.push(
+        iter.toLocaleTimeString("en-GB", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        })
+      );
+      iter.setMinutes(iter.getMinutes() + 15);
+    }
+
+    return slots;
+  }, []);
+
+  // Quick action helper for relative time offsets
+  const setRelativeTime = (offsetMinutes: number) => {
+    const now = new Date();
+    // Rounding logic for relative times to ensure they land on sensible boundaries
+    const target = new Date(now.getTime() + offsetMinutes * 60000);
+    
+    let hours = target.getHours();
+    let minutes = target.getMinutes();
+
+    // Clamp to business hours
+    if (hours < 8) {
+      hours = 8;
+      minutes = 0;
+    } else if (hours >= 20) {
+      hours = 20;
+      minutes = 0;
+    }
+
+    const formatted = `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
+    setPickupTime(formatted);
+  };
+
   const containerVariants: Variants = {
     hidden: { opacity: 0, y: 30 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
@@ -53,28 +126,10 @@ export const OnlineOrder: React.FC = () => {
     }
   };
 
-  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value.replace(/\D/g, "");
-    if (value.length > 4) value = value.slice(0, 4);
-    if (value.length >= 2) {
-      const hours = parseInt(value.slice(0, 2), 10);
-      const validHours = Math.min(hours, 23).toString().padStart(2, "0");
-      if (value.length > 2) {
-        const minutes = parseInt(value.slice(2), 10);
-        const validMinutes = Math.min(minutes, 59).toString().padStart(2, "0");
-        setPickupTime(`${validHours}:${validMinutes}`);
-        return;
-      }
-      setPickupTime(`${validHours}:`);
-      return;
-    }
-    setPickupTime(value);
-  };
-
   const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || phone.length < 13 || pickupTime.length < 5 || cart.length === 0) {
-      alert("Please provide a valid name, complete phone number, and targeted pickup time (HH:MM).");
+    if (!name || phone.length < 13 || !pickupTime || cart.length === 0) {
+      alert("Please provide a valid name, complete phone number, and targeted pickup time.");
       return;
     }
 
@@ -209,9 +264,51 @@ export const OnlineOrder: React.FC = () => {
                   <input type="tel" required placeholder={t("order.inputPhone")} value={phone} onChange={handlePhoneChange} className="w-full bg-luxury-dark border border-white/10 rounded-xl py-3 pl-12 pr-4 text-sm text-white placeholder-white/30 focus:outline-none focus:border-luxury-gold font-mono" />
                 </div>
 
-                <div className="relative">
-                  <Clock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-luxury-clay" />
-                  <input type="text" required placeholder={t("order.inputTime")} value={pickupTime} onChange={handleTimeChange} maxLength={5} className="w-full bg-luxury-dark border border-white/10 rounded-xl py-3 pl-12 pr-4 text-sm text-white placeholder-white/30 focus:outline-none focus:border-luxury-gold font-mono" />
+                {/* Luxury Time Picker UX Component */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Clock className="h-4 w-4 text-luxury-gold" />
+                    <span className="text-xs font-semibold uppercase tracking-widest text-white/60">
+                      {t("order.inputTime")}
+                    </span>
+                  </div>
+                  
+                  {/* Quick Selection Action Badges */}
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setRelativeTime(15)}
+                      className="flex-1 flex items-center justify-center gap-2 py-2 px-3 bg-luxury-dark/40 border border-white/10 rounded-lg text-[10px] font-bold uppercase tracking-tighter text-white/80 hover:border-luxury-gold/50 hover:bg-luxury-gold/5 transition-all group"
+                    >
+                      <Zap size={12} className="text-luxury-gold group-hover:scale-110 transition-transform" />
+                      ASAP (10-15 min)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setRelativeTime(30)}
+                      className="flex-1 py-2 px-3 bg-luxury-dark/40 border border-white/10 rounded-lg text-[10px] font-bold uppercase tracking-tighter text-white/80 hover:border-luxury-gold/50 hover:bg-luxury-gold/5 transition-all"
+                    >
+                      In 30 minutes
+                    </button>
+                  </div>
+
+                  {/* Horizontal Scrollable Time Slots */}
+                  <div className="flex overflow-x-auto gap-3 pb-2 scrollbar-none snap-x mask-fade-right">
+                    {timeSlots.map((slot) => (
+                      <button
+                        key={slot}
+                        type="button"
+                        onClick={() => setPickupTime(slot)}
+                        className={`flex-none px-4 py-2 text-xs font-mono rounded-lg transition-all snap-start ${
+                          pickupTime === slot
+                            ? "bg-luxury-gold text-luxury-dark border border-luxury-gold font-bold shadow-[0_0_15px_rgba(197,168,128,0.2)]"
+                            : "bg-luxury-dark/50 border border-white/10 text-white/70 hover:border-luxury-gold/50"
+                        }`}
+                      >
+                        {slot}
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="pt-6 border-t border-white/10 space-y-3">
