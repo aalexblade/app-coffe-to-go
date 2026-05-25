@@ -14,11 +14,12 @@ import {
   Minus,
   Plus,
   Zap,
+  AlertCircle,
 } from "lucide-react";
 
 /**
  * OnlineOrder component handles the shopping cart and dispatch.
- * Optimized with a high-end Luxury Time Picker for pickup scheduling.
+ * Enhanced with strict form validation and premium error feedback.
  */
 export const OnlineOrder: React.FC = () => {
   const {
@@ -35,9 +36,22 @@ export const OnlineOrder: React.FC = () => {
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("+380");
+  const [phoneBlurred, setPhoneBlurred] = useState(false);
   const [pickupTime, setPickupTime] = useState("");
   const [isOrdered, setIsOrdered] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Form Validation Logic
+  const isFormValid = useMemo(() => {
+    const isNameValid = name.trim().length >= 2;
+    const isPhoneValid = phone.length === 13;
+    const isTimeValid = pickupTime.length >= 5;
+    const isCartNotEmpty = cart.length > 0;
+    
+    return isNameValid && isPhoneValid && isTimeValid && isCartNotEmpty;
+  }, [name, phone, pickupTime, cart]);
+
+  const isPhoneInvalid = phoneBlurred && phone.length < 13;
 
   // Generate dynamic time slots for business hours (08:00 - 20:00)
   const timeSlots = useMemo(() => {
@@ -49,11 +63,9 @@ export const OnlineOrder: React.FC = () => {
     let startHour = 8;
     let startMinute = 0;
 
-    // Check if within business hours (08:00 - 20:00)
     const isWithinHours = currentHour >= 8 && currentHour < 20;
 
     if (isWithinHours) {
-      // Round to next 15-minute interval
       startMinute = Math.ceil(currentMinutes / 15) * 15;
       startHour = currentHour;
       
@@ -62,7 +74,6 @@ export const OnlineOrder: React.FC = () => {
         startMinute = 0;
       }
       
-      // If rounding pushed us to/past closing time, fallback to next day (full sequence)
       if (startHour >= 20) {
         startHour = 8;
         startMinute = 0;
@@ -89,16 +100,13 @@ export const OnlineOrder: React.FC = () => {
     return slots;
   }, []);
 
-  // Quick action helper for relative time offsets
   const setRelativeTime = (offsetMinutes: number) => {
     const now = new Date();
-    // Rounding logic for relative times to ensure they land on sensible boundaries
     const target = new Date(now.getTime() + offsetMinutes * 60000);
     
     let hours = target.getHours();
     let minutes = target.getMinutes();
 
-    // Clamp to business hours
     if (hours < 8) {
       hours = 8;
       minutes = 0;
@@ -128,10 +136,7 @@ export const OnlineOrder: React.FC = () => {
 
   const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || phone.length < 13 || !pickupTime || cart.length === 0) {
-      alert("Please provide a valid name, complete phone number, and targeted pickup time.");
-      return;
-    }
+    if (!isFormValid) return;
 
     setIsSubmitting(true);
     
@@ -162,6 +167,7 @@ export const OnlineOrder: React.FC = () => {
       setName("");
       setPhone("+380");
       setPickupTime("");
+      setPhoneBlurred(false);
     } catch (error) {
       console.error(error);
       alert("Error processing order.");
@@ -261,11 +267,33 @@ export const OnlineOrder: React.FC = () => {
 
                 <div className="relative">
                   <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-luxury-clay" />
-                  <input type="tel" required placeholder={t("order.inputPhone")} value={phone} onChange={handlePhoneChange} className="w-full bg-luxury-dark border border-white/10 rounded-xl py-3 pl-12 pr-4 text-sm text-white placeholder-white/30 focus:outline-none focus:border-luxury-gold font-mono" />
+                  <input 
+                    type="tel" 
+                    required 
+                    placeholder={t("order.inputPhone")} 
+                    value={phone} 
+                    onChange={handlePhoneChange} 
+                    onBlur={() => setPhoneBlurred(true)}
+                    className={`w-full bg-luxury-dark border rounded-xl py-3 pl-12 pr-4 text-sm text-white placeholder-white/30 focus:outline-none font-mono transition-colors ${
+                      isPhoneInvalid ? "border-rose-900/50 focus:border-rose-700" : "border-white/10 focus:border-luxury-gold"
+                    }`} 
+                  />
+                  <AnimatePresence>
+                    {isPhoneInvalid && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="absolute left-0 -bottom-6 flex items-center gap-1.5 text-[10px] text-rose-500 font-medium uppercase tracking-wider"
+                      >
+                        <AlertCircle size={10} />
+                        Please enter a complete phone number
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
 
-                {/* Luxury Time Picker UX Component */}
-                <div className="space-y-4">
+                <div className="space-y-4 !mt-8">
                   <div className="flex items-center gap-2 mb-2">
                     <Clock className="h-4 w-4 text-luxury-gold" />
                     <span className="text-xs font-semibold uppercase tracking-widest text-white/60">
@@ -273,7 +301,6 @@ export const OnlineOrder: React.FC = () => {
                     </span>
                   </div>
                   
-                  {/* Quick Selection Action Badges */}
                   <div className="flex gap-2">
                     <button
                       type="button"
@@ -292,7 +319,6 @@ export const OnlineOrder: React.FC = () => {
                     </button>
                   </div>
 
-                  {/* Horizontal Scrollable Time Slots */}
                   <div className="flex overflow-x-auto gap-3 pb-2 scrollbar-none snap-x mask-fade-right">
                     {timeSlots.map((slot) => (
                       <button
@@ -316,7 +342,13 @@ export const OnlineOrder: React.FC = () => {
                   <div className="flex justify-between text-sm text-white/60"><span>{t("order.serviceFee")}</span><span className="text-luxury-gold uppercase text-xs font-medium">{t("order.complimentary")}</span></div>
                   <div className="flex justify-between text-base text-white pt-3 border-t border-white/5"><span>{t("order.totalCost")}</span><span className="text-xl text-luxury-gold font-medium">{totalPrice} {t("common.uah")}</span></div>
                 </div>
-                <button type="submit" disabled={isSubmitting} className="w-full mt-6 bg-luxury-gold text-luxury-dark font-medium py-4 rounded-xl text-sm tracking-widest uppercase transition-all hover:bg-white disabled:opacity-50">{isSubmitting ? t("common.processing") : t("order.secureOrderButton")}</button>
+                <button 
+                  type="submit" 
+                  disabled={!isFormValid || isSubmitting} 
+                  className="w-full mt-6 bg-luxury-gold text-luxury-dark font-medium py-4 rounded-xl text-sm tracking-widest uppercase transition-all hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  {isSubmitting ? t("common.processing") : t("order.secureOrderButton")}
+                </button>
               </form>
             </div>
           </div>
