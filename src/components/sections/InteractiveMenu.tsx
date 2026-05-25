@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus } from 'lucide-react';
+import { Plus, Minus } from 'lucide-react';
 import { type MenuItem, MENU_ITEMS } from '../../config/menuData';
 import { useCart } from '../../hooks/useCart';
 import { useLanguage } from '../../context/LangContext';
@@ -13,7 +13,6 @@ type Category = 'All' | 'Espresso' | 'Filter' | 'Signature' | 'Bakery';
  * Displays a filtered grid of menu items with standardized layout padding.
  */
 export const InteractiveMenu: React.FC = () => {
-  const { addToCart } = useCart();
   const { t } = useLanguage();
   const [activeCategory, setActiveCategory] = useState<Category>('All');
 
@@ -79,7 +78,7 @@ export const InteractiveMenu: React.FC = () => {
         >
           <AnimatePresence mode="popLayout">
             {filteredItems.map((item) => (
-              <MenuCard key={item.id} item={item} onAdd={() => addToCart(item)} />
+              <MenuCard key={item.id} item={item} />
             ))}
           </AnimatePresence>
         </motion.div>
@@ -91,8 +90,13 @@ export const InteractiveMenu: React.FC = () => {
 /**
  * Individual Menu Card Component
  */
-const MenuCard: React.FC<{ item: MenuItem; onAdd: () => void }> = ({ item, onAdd }) => {
+const MenuCard: React.FC<{ item: MenuItem }> = ({ item }) => {
   const { t } = useLanguage();
+  const { cart, addToCart, decrementQuantity } = useCart();
+  
+  // Extract active quantity from cart if item exists
+  const cartItem = cart.find(i => i.id === item.id);
+  const quantity = cartItem?.quantity || 0;
   
   return (
     <motion.div
@@ -126,18 +130,53 @@ const MenuCard: React.FC<{ item: MenuItem; onAdd: () => void }> = ({ item, onAdd
           {t(`menuItems.${item.id}.description` as TranslationPath)}
         </p>
 
-        <button
-          onClick={onAdd}
-          className="flex items-center gap-2 text-xs font-bold tracking-ritual uppercase text-white group/btn"
-        >
-          <span className="relative">
-            {t("menu.addToOrder")}
-            <span className="absolute -bottom-1 left-0 w-0 h-px bg-luxury-gold group-hover/btn:w-full transition-all duration-300" />
-          </span>
-          <div className="flex items-center justify-center w-8 h-8 rounded-full border border-white/10 group-hover/btn:border-luxury-gold group-hover/btn:bg-luxury-gold group-hover/btn:text-luxury-dark transition-all duration-300">
-            <Plus size={14} />
-          </div>
-        </button>
+        {/* Action Button / Counter Morph Logic */}
+        <AnimatePresence mode="wait">
+          {quantity === 0 ? (
+            <motion.button
+              key="add-to-cart"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              onClick={() => addToCart(item)}
+              className="flex items-center gap-2 text-xs font-bold tracking-ritual uppercase text-white group/btn w-full text-left"
+            >
+              <span className="relative">
+                {t("menu.addToOrder")}
+                <span className="absolute -bottom-1 left-0 w-0 h-px bg-luxury-gold group-hover/btn:w-full transition-all duration-300" />
+              </span>
+              <div className="flex items-center justify-center w-8 h-8 rounded-full border border-white/10 group-hover/btn:border-luxury-gold group-hover/btn:bg-luxury-gold group-hover/btn:text-luxury-dark transition-all duration-300 ml-auto">
+                <Plus size={14} />
+              </div>
+            </motion.button>
+          ) : (
+            <motion.div
+              key="in-cart-counter"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="flex items-center justify-between border border-luxury-gold bg-luxury-gold/5 px-4 py-2.5 rounded-full text-white shadow-[0_0_15px_rgba(197,168,128,0.1)]"
+            >
+              <button 
+                onClick={() => decrementQuantity(item.id)}
+                className="hover:text-luxury-gold transition-colors duration-200 cursor-pointer"
+              >
+                <Minus size={14} />
+              </button>
+              
+              <span className="text-xs font-bold font-sans tracking-widest text-luxury-gold uppercase">
+                In Order: {quantity}
+              </span>
+
+              <button 
+                onClick={() => addToCart(item)}
+                className="hover:text-luxury-gold transition-colors duration-200 cursor-pointer"
+              >
+                <Plus size={14} />
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </motion.div>
   );
