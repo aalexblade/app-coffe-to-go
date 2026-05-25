@@ -20,3 +20,23 @@ body {
   color: white;
   font-family: var(--font-sans);
 }
+
+/* Global Luxury Interactive Geometry Override
+  Enforces smooth pointer cursors across all interactive boundaries
+*/
+button,
+a,
+input[type="submit"],
+input[type="button"],
+select {
+  cursor: pointer !important;
+}
+
+/* State Reset Guard
+  Prevents misleading pointer sequences when elements are in a disabled or processing state
+*/
+button:disabled,
+a:disabled,
+input:disabled {
+  cursor: not-allowed !important;
+}
