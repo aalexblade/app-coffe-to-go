@@ -19,7 +19,7 @@ import {
 
 /**
  * OnlineOrder component handles the shopping cart and dispatch.
- * Enhanced with strict form validation and premium error feedback.
+ * Optimized with user retention mechanisms via localStorage synchronization.
  */
 export const OnlineOrder: React.FC = () => {
   const {
@@ -34,8 +34,25 @@ export const OnlineOrder: React.FC = () => {
 
   const { t } = useLanguage();
 
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("+380");
+  // LocalStorage keys for user retention
+  const LS_NAME_KEY = "kaffa_user_name";
+  const LS_PHONE_KEY = "kaffa_user_phone";
+
+  // Initial State hooks with localStorage synchronization
+  const [name, setName] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem(LS_NAME_KEY) || "";
+    }
+    return "";
+  });
+
+  const [phone, setPhone] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem(LS_PHONE_KEY) || "+380";
+    }
+    return "+380";
+  });
+
   const [phoneBlurred, setPhoneBlurred] = useState(false);
   const [pickupTime, setPickupTime] = useState("");
   const [isOrdered, setIsOrdered] = useState(false);
@@ -162,10 +179,14 @@ export const OnlineOrder: React.FC = () => {
 
       if (!response.ok) throw new Error("Dispatch failure.");
 
+      // Save valid user inputs for future retention
+      localStorage.setItem(LS_NAME_KEY, name.trim());
+      localStorage.setItem(LS_PHONE_KEY, phone.replace(/\s/g, ""));
+
       setIsOrdered(true);
       clearCart();
-      setName("");
-      setPhone("+380");
+      
+      // Retention Override: Keep name and phone, only clear time-specific state
       setPickupTime("");
       setPhoneBlurred(false);
     } catch (error) {
