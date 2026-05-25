@@ -4,44 +4,44 @@ import { useLanguage } from '../../context/LangContext';
 
 /**
  * Storytelling section for the coffee-to-go window shop.
- * Enhanced with premium GPU-accelerated scroll reveal micro-interactions.
+ * Showcases single-origin bean culture with standardized spacing and type-safe scroll reveal.
  */
 export const Storytelling: React.FC = () => {
   const { t } = useLanguage();
 
+  // Explicitly typing variants to ensure strict TypeScript compilation
   const textVariants: Variants = {
     hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0 },
+    visible: {
+      opacity: 1,
+      y: 0,
+    },
   };
 
   const imageVariants: Variants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0 },
+    hidden: { scale: 0.95, opacity: 0 },
+    visible: {
+      scale: 1,
+      opacity: 1,
+    },
   };
 
+  // FIX: Forcing strict coordinate array tuple matching Easing definitions via 'as const'
   const revealTransition = {
     duration: 0.8,
-    ease: [0.21, 0.45, 0.32, 0.9],
-  };
-
-  const viewportConfig = {
-    once: true,
-    margin: "-120px",
+    ease: [0.21, 0.45, 0.32, 0.9] as const,
   };
 
   return (
-    <section 
-      id="storytelling" 
-      className="relative bg-luxury-dark py-20 md:py-32 px-6 md:px-12 lg:px-24"
-    >
+    <section id="storytelling" className="relative bg-luxury-dark py-20 md:py-32 px-6 md:px-12 lg:px-24">
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 md:grid-cols-2 md:items-center">
         
-        {/* Cinematic Imagery Column */}
+        {/* Cinematic Imagery Column with Scroll Reveal */}
         <motion.div
           variants={imageVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={viewportConfig}
+          viewport={{ once: true, margin: "-120px" }}
           transition={revealTransition}
           className="relative aspect-4/5 w-full overflow-hidden rounded-2xl bg-luxury-card border border-white/5"
         >
@@ -50,15 +50,16 @@ export const Storytelling: React.FC = () => {
             alt="Cinematic coffee brewing"
             className="h-full w-full object-cover opacity-80 grayscale-10 transition-transform duration-2000 hover:scale-105"
           />
+          {/* Subtle gradient overlay using modern v4 bg-linear syntax */}
           <div className="absolute inset-0 bg-linear-to-t from-luxury-dark via-transparent to-transparent opacity-60" />
         </motion.div>
 
-        {/* Typography-First Narrative Column */}
+        {/* Typography-First Narrative Column with Scroll Reveal */}
         <motion.div
           variants={textVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={viewportConfig}
+          viewport={{ once: true, margin: "-120px" }}
           transition={revealTransition}
           className="flex flex-col justify-center space-y-6"
         >

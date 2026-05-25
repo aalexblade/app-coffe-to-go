@@ -5,6 +5,7 @@ import { useCart } from "./hooks/useCart";
 import { Hero } from "./components/sections/Hero";
 import { Storytelling } from "./components/sections/Storytelling";
 import { InteractiveMenu } from "./components/sections/InteractiveMenu";
+import { SocialFeed } from "./components/sections/SocialFeed";
 import { OnlineOrder } from "./components/sections/OnlineOrder"; 
 import { LocationMap } from "./components/sections/LocationMap";
 import { LanguageSwitcher } from "./components/ui/LanguageSwitcher";
@@ -29,6 +30,9 @@ const App: React.FC = () => {
       
       {/* Animated menu categories */}
       <InteractiveMenu />
+      
+      {/* Community social proof and Instagram curation */}
+      <SocialFeed />
       
       {/* Seamless checkout & pickup time scheduling */}
       <OnlineOrder />
