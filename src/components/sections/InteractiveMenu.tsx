@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { Plus, Minus } from 'lucide-react';
 import { type MenuItem, MENU_ITEMS } from '../../config/menuData';
 import { useCart } from '../../hooks/useCart';
@@ -10,7 +10,7 @@ type Category = 'All' | 'Espresso' | 'Filter' | 'Signature' | 'Bakery';
 
 /**
  * InteractiveMenu component.
- * Displays a filtered grid of menu items with standardized layout padding.
+ * Displays a filtered grid of menu items with GPU-accelerated staggered reveal.
  */
 export const InteractiveMenu: React.FC = () => {
   const { t } = useLanguage();
@@ -21,6 +21,28 @@ export const InteractiveMenu: React.FC = () => {
   const filteredItems = activeCategory === 'All' 
     ? MENU_ITEMS 
     : MENU_ITEMS.filter(item => item.category === activeCategory);
+
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1, 
+      transition: { staggerChildren: 0.15 } 
+    },
+  };
+
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 40 },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { duration: 0.6, ease: "easeOut" } 
+    },
+  };
+
+  const viewportConfig = {
+    once: true,
+    margin: "-100px",
+  };
 
   return (
     <section 
@@ -49,11 +71,18 @@ export const InteractiveMenu: React.FC = () => {
           </motion.p>
         </div>
 
-        {/* Category Tabs */}
-        <div className="flex flex-wrap justify-center gap-4 mb-16">
+        {/* Category Tabs with Staggered Reveal */}
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportConfig}
+          className="flex flex-wrap justify-center gap-4 mb-16"
+        >
           {categories.map((category) => (
-            <button
+            <motion.button
               key={category}
+              variants={itemVariants}
               onClick={() => setActiveCategory(category)}
               className={`relative px-6 py-2 text-sm font-medium tracking-widest uppercase transition-colors duration-300 ${
                 activeCategory === category ? 'text-luxury-gold' : 'text-luxury-clay hover:text-white'
@@ -67,18 +96,26 @@ export const InteractiveMenu: React.FC = () => {
                   transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                 />
               )}
-            </button>
+            </motion.button>
           ))}
-        </div>
+        </motion.div>
 
-        {/* Items Grid */}
+        {/* Items Grid with Curated Sequential Reveal */}
         <motion.div 
           layout
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewportConfig}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12"
         >
           <AnimatePresence mode="popLayout">
             {filteredItems.map((item) => (
-              <MenuCard key={item.id} item={item} />
+              <MenuCard 
+                key={item.id} 
+                item={item} 
+                variants={itemVariants}
+              />
             ))}
           </AnimatePresence>
         </motion.div>
@@ -88,9 +125,9 @@ export const InteractiveMenu: React.FC = () => {
 };
 
 /**
- * Individual Menu Card Component with Fly-to-Cart micro-interaction
+ * Individual Menu Card Component
  */
-const MenuCard: React.FC<{ item: MenuItem }> = ({ item }) => {
+const MenuCard: React.FC<{ item: MenuItem; variants: Variants }> = ({ item, variants }) => {
   const { t } = useLanguage();
   const { cart, addToCart, decrementQuantity } = useCart();
   
@@ -101,20 +138,15 @@ const MenuCard: React.FC<{ item: MenuItem }> = ({ item }) => {
   const cartItem = cart.find(i => i.id === item.id);
   const quantity = cartItem?.quantity || 0;
 
-  /**
-   * Spawns a flying particle from the click coordinates toward the floating cart trigger.
-   */
   const handleAction = (e: React.MouseEvent, action: () => void) => {
-    if (typeof window === "undefined") {
-      action();
-      return;
-    }
+    if (typeof window === "undefined") return;
 
-    const startX = e.clientX;
-    const startY = e.clientY;
-    const id = Date.now() + Math.random();
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+    const id = Date.now();
 
-    setParticles((prev) => [...prev, { id, x: startX, y: startY }]);
+    setParticles((prev) => [...prev, { id, x, y }]);
     action();
   };
 
@@ -125,13 +157,10 @@ const MenuCard: React.FC<{ item: MenuItem }> = ({ item }) => {
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.9 }}
-      transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+      variants={variants}
       className="group relative bg-luxury-card border border-white/5 overflow-hidden rounded-sm hover:border-luxury-gold/30 transition-colors duration-500"
     >
-      {/* Fly-to-Cart Particle Stream */}
+      {/* Fly-to-Cart Particle Layer */}
       <AnimatePresence>
         {particles.map((particle) => (
           <motion.div
@@ -145,15 +174,15 @@ const MenuCard: React.FC<{ item: MenuItem }> = ({ item }) => {
             animate={{ 
               x: window.innerWidth - 64, 
               y: window.innerHeight - 64, 
-              scale: 0.3, 
+              scale: 0.2, 
               opacity: 0 
             }}
             transition={{ 
-              duration: 0.7, 
+              duration: 0.8, 
               ease: [0.25, 1, 0.5, 1] 
             }}
             onAnimationComplete={() => removeParticle(particle.id)}
-            className="fixed top-0 left-0 w-4 h-4 bg-luxury-gold rounded-full z-50 pointer-events-none shadow-[0_0_10px_rgba(197,168,128,0.6)]"
+            className="fixed top-0 left-0 w-4 h-4 bg-luxury-gold rounded-full z-[100] pointer-events-none shadow-[0_0_15px_rgba(197,168,128,0.6)]"
           />
         ))}
       </AnimatePresence>

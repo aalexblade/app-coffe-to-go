@@ -4,31 +4,29 @@ import { useLanguage } from '../../context/LangContext';
 
 /**
  * Storytelling section for the coffee-to-go window shop.
- * Standardized spacing applied for unified luxury vertical rhythm.
+ * Enhanced with premium GPU-accelerated scroll reveal micro-interactions.
  */
 export const Storytelling: React.FC = () => {
   const { t } = useLanguage();
 
   const textVariants: Variants = {
-    hidden: { opacity: 0, y: 40 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.8,
-      },
-    },
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0 },
   };
 
   const imageVariants: Variants = {
-    hidden: { scale: 0.95, opacity: 0 },
-    visible: {
-      scale: 1,
-      opacity: 1,
-      transition: {
-        duration: 1,
-      },
-    },
+    hidden: { opacity: 0, y: 30 },
+    visible: { opacity: 1, y: 0 },
+  };
+
+  const revealTransition = {
+    duration: 0.8,
+    ease: [0.21, 0.45, 0.32, 0.9],
+  };
+
+  const viewportConfig = {
+    once: true,
+    margin: "-120px",
   };
 
   return (
@@ -43,7 +41,8 @@ export const Storytelling: React.FC = () => {
           variants={imageVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={viewportConfig}
+          transition={revealTransition}
           className="relative aspect-4/5 w-full overflow-hidden rounded-2xl bg-luxury-card border border-white/5"
         >
           <img
@@ -59,7 +58,8 @@ export const Storytelling: React.FC = () => {
           variants={textVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={viewportConfig}
+          transition={revealTransition}
           className="flex flex-col justify-center space-y-6"
         >
           <span className="text-sm font-medium tracking-ritual uppercase text-luxury-gold">
