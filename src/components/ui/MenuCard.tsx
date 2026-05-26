@@ -1,15 +1,15 @@
-import React from 'react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { Plus, Minus } from 'lucide-react';
 import { type MenuItem } from '../../config/menuData';
 import { useCart } from '../../hooks/useCart';
-import { useLanguage } from '../../context/LangContext';
+import { useLanguage } from '../../hooks/useLanguage';
 import type { TranslationPath } from '../../config/translations';
 
 /**
- * Individual Menu Card Component - Fully Type-Safe with MenuItem interface
+ * Individual Menu Card Component - Modern Named Declaration
+ * Fully Type-Safe with MenuItem interface and Framer Motion orchestration.
  */
-export const MenuCard: React.FC<{ item: MenuItem }> = ({ item }) => {
+export function MenuCard({ item }: { item: MenuItem }) {
   const { cart, addToCart, decrementQuantity } = useCart();
   const { t } = useLanguage();
   
@@ -116,4 +116,4 @@ export const MenuCard: React.FC<{ item: MenuItem }> = ({ item }) => {
       </div>
     </motion.div>
   );
-};
+}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { MapPin } from 'lucide-react';
 import { useOpeningHours } from '../../hooks/useOpeningHours';
-import { useLanguage } from '../../context/LangContext';
+import { useLanguage } from '../../hooks/useLanguage';
 
 /**
  * LocationStatus component displays the physical address and the live shop status.
@@ -43,7 +43,7 @@ const LocationStatus: React.FC = () => {
           }`}></span>
         </span>
         <span className="font-sans text-[11px] font-semibold uppercase tracking-wider">
-          {isOpen ? t("common.statusOpen" as any) : t("common.statusClosed" as any)}
+          {isOpen ? t("common.statusOpen") : t("common.statusClosed")}
         </span>
       </div>
     </div>

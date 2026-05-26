@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { useLanguage } from "../../context/LangContext";
+import { useLanguage } from "../../hooks/useLanguage";
 import { MapPin, Clock, Phone } from "lucide-react";
 import LocationStatus from "../ui/LocationStatus";
 import type { TranslationPath } from "../../config/translations";

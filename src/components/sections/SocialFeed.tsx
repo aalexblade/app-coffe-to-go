@@ -1,6 +1,6 @@
 import React from "react";
 import { motion, type Variants } from "framer-motion";
-import { useLanguage } from "../../context/LangContext";
+import { useLanguage } from "../../hooks/useLanguage";
 import { Star, Heart, MessageCircle } from "lucide-react";
 import type { TranslationPath } from "../../config/translations";
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, type Variants } from 'framer-motion';
-import { useLanguage } from '../../context/LangContext';
+import { useLanguage } from "../../hooks/useLanguage";
 
 /**
  * Storytelling section for the coffee-to-go window shop.

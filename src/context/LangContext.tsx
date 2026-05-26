@@ -1,22 +1,17 @@
-import { createContext, useState, useContext, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import type { ReactNode } from 'react';
 import { translations } from '../config/translations';
 import type { Language, TranslationPath } from '../config/translations';
-
-interface LanguageContextType {
-  language: Language;
-  setLanguage: (lang: Language) => void;
-  t: (path: TranslationPath) => string;
-}
-
-// Private local context declaration — perfect for Vite HMR optimization
-const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+import { LanguageContext } from './LanguageContext';
 
 interface LanguageProviderProps {
   children: ReactNode;
 }
 
-// First valid export: The global state context wrapper component
+/**
+ * LanguageProvider manages the application's localization state.
+ * It is the single valid export of this file to satisfy Fast Refresh constraints.
+ */
 export const LanguageProvider = ({ children }: LanguageProviderProps) => {
   const [language, setLanguageState] = useState<Language>(() => {
     try {
@@ -24,8 +19,8 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       if (saved === 'en' || saved === 'ua') {
         return saved as Language;
       }
-    } catch (error) {
-      console.warn('Failed to read language from localStorage', error);
+    } catch {
+      // Wildcard catch for safe localStorage access
     }
     return 'en';
   });
@@ -34,8 +29,8 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
     setLanguageState(lang);
     try {
       localStorage.setItem('language', lang);
-    } catch (error) {
-      console.warn('Failed to save language to localStorage', error);
+    } catch {
+      // Wildcard catch for safe localStorage persistence
     }
   };
 
@@ -66,13 +61,4 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
       {children}
     </LanguageContext.Provider>
   );
-};
-
-// Second valid export: The hook for context delivery across components
-export const useLanguage = (): LanguageContextType => {
-  const context = useContext(LanguageContext);
-  if (context === undefined) {
-    throw new Error('useLanguage must be used within a LanguageProvider');
-  }
-  return context;
 };

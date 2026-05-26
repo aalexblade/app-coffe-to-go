@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { MENU_ITEMS } from '../../config/menuData';
-import { useLanguage } from '../../context/LangContext';
+import { useLanguage } from '../../hooks/useLanguage';
 import type { TranslationPath } from '../../config/translations';
 import { MenuCard } from '../ui/MenuCard';
 

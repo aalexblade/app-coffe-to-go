@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion, type Variants } from 'framer-motion'; 
 import { ChevronDown } from 'lucide-react';
-import { useLanguage } from '../../context/LangContext';
+import { useLanguage } from '../../hooks/useLanguage';
 import LocationStatus from '../ui/LocationStatus';
 
 /**

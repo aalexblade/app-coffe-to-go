@@ -22,7 +22,7 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
     let parsedData;
     try {
       parsedData = JSON.parse(body);
-    } catch (e) {
+    } catch {
       res.statusCode = 400;
       res.setHeader('Content-Type', 'application/json');
       return res.end(JSON.stringify({ error: "Invalid JSON payload" }));

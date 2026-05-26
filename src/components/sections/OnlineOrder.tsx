@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { useCart } from "../../hooks/useCart";
-import { useLanguage } from "../../context/LangContext";
+import { useLanguage } from "../../hooks/useLanguage";
 import type { TranslationPath } from "../../config/translations";
 
 import {

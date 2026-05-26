@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useLanguage } from '../../context/LangContext';
+import { useLanguage } from '../../hooks/useLanguage';
 import type { Language } from '../../config/translations';
 
 interface LangOption {
