@@ -1,6 +1,6 @@
 /**
  * Strict Type definitions mimicking serverless request/response boundaries.
- * Bypasses strict browser compiler constraints safely.
+ * Completely eliminates browser compiler context errors.
  */
 interface SafeApiRequest {
   method?: string;
@@ -27,11 +27,12 @@ export default async function handler(req: SafeApiRequest, res: SafeApiResponse)
     return res.end(JSON.stringify({ error: 'Method not allowed' }));
   }
 
-  // 2. Safely capture environmental variables from host runtime context
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const globalEnv = (globalThis as any).process?.env || {};
-  const botToken = globalEnv.TELEGRAM_BOT_TOKEN;
-  const chatId = globalEnv.TELEGRAM_CHAT_ID;
+  // 2. Safely capture environment variables from the native Node.js runtime context
+  // Using explicit structural casting allows compiling without global Node types
+  const globalScope = globalThis as unknown as { process?: { env?: Record<string, string> } };
+  const executionEnv = globalScope.process?.env || {};
+  const botToken = executionEnv.TELEGRAM_BOT_TOKEN;
+  const chatId = executionEnv.TELEGRAM_CHAT_ID;
 
   if (!botToken || !chatId) {
     console.error('Environment variables missing on Vercel deployment instance');
