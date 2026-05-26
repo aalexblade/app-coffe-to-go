@@ -59,6 +59,7 @@ export const translations = {
       complimentary: "Complimentary",
       totalCost: "Total Ritual Cost",
       secureOrderButton: "Secure Window Order",
+      clearCart: "Clear Cart",
     },
     location: {
       badge: "Location",
@@ -165,6 +166,7 @@ export const translations = {
       complimentary: "Безкоштовно",
       totalCost: "Вартість ритуалу",
       secureOrderButton: "Підтвердити замовлення",
+      clearCart: "Очистити кошик",
     },
     location: {
       badge: "Локація",
