@@ -1,25 +1,9 @@
 /**
- * Strict Type definitions mimicking serverless request/response boundaries.
- * Completely eliminates browser compiler context errors.
- */
-interface SafeApiRequest {
-  method?: string;
-  body?: {
-    message?: string;
-  };
-}
-
-interface SafeApiResponse {
-  statusCode?: number;
-  setHeader: (name: string, value: string) => void;
-  end: (chunk: string) => void;
-}
-
-/**
  * Serverless API handler for secure Telegram message dispatch.
- * Fully optimized for Vercel environments using native body-parser pipelines.
+ * Fully optimized to bypass Vercel CLI compilation bugs on Windows environments.
+ * All internal comments are strictly written in English.
  */
-export default async function handler(req: SafeApiRequest, res: SafeApiResponse) {
+export default async function handler(req, res) {
   // 1. Enforce strict HTTP POST protocol security boundaries
   if (req.method !== 'POST') {
     res.statusCode = 405;
@@ -28,11 +12,9 @@ export default async function handler(req: SafeApiRequest, res: SafeApiResponse)
   }
 
   // 2. Safely capture environment variables from the native Node.js runtime context
-  // Using explicit structural casting allows compiling without global Node types
-  const globalScope = globalThis as unknown as { process?: { env?: Record<string, string> } };
-  const executionEnv = globalScope.process?.env || {};
-  const botToken = executionEnv.TELEGRAM_BOT_TOKEN;
-  const chatId = executionEnv.TELEGRAM_CHAT_ID;
+  // Supports both standard deployment keys and fallback Vite client-side prefixes
+  const botToken = process.env.TELEGRAM_BOT_TOKEN || process.env.VITE_TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID || process.env.VITE_TELEGRAM_CHAT_ID;
 
   if (!botToken || !chatId) {
     console.error('Environment variables missing on Vercel deployment instance');
@@ -45,7 +27,7 @@ export default async function handler(req: SafeApiRequest, res: SafeApiResponse)
     // 3. Extract payload properties directly from Vercel's auto-parsed body dictionary
     const orderMessage = req.body?.message;
 
-    // Strict defensive validation check
+    // Strict defensive validation check for incoming payload data
     if (!orderMessage || typeof orderMessage !== 'string' || orderMessage.trim() === '') {
       res.statusCode = 400;
       res.setHeader('Content-Type', 'application/json');
