@@ -6,6 +6,8 @@ export const translations = {
       uah: "UAH",
       processing: "Processing...",
       location: "Location",
+      statusOpen: "Open Now",
+      statusClosed: "Closed",
     },
     hero: {
       premiumExperience: "Premium Coffee Experience",
@@ -110,6 +112,8 @@ export const translations = {
       uah: "грн",
       processing: "Обробка...",
       location: "Локація",
+      statusOpen: "Відчинено",
+      statusClosed: "Зачинено",
     },
     hero: {
       premiumExperience: "Преміальна кавова культура",

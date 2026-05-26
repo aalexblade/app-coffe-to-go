@@ -8,7 +8,7 @@ import { useLanguage } from '../../context/LangContext';
  * Adheres to the dark luxury aesthetic with emerald tones for active status.
  */
 const LocationStatus: React.FC = () => {
-  const { isOpen, statusText } = useOpeningHours();
+  const { isOpen } = useOpeningHours();
   const { t } = useLanguage();
 
   return (
@@ -43,7 +43,7 @@ const LocationStatus: React.FC = () => {
           }`}></span>
         </span>
         <span className="font-sans text-[11px] font-semibold uppercase tracking-wider">
-          {statusText}
+          {isOpen ? t("common.statusOpen" as any) : t("common.statusClosed" as any)}
         </span>
       </div>
     </div>

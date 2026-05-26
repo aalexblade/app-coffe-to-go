@@ -5,7 +5,6 @@ import { useState, useEffect } from 'react';
  */
 interface OpeningHoursStatus {
   isOpen: boolean;
-  statusText: 'Open Now' | 'Closed';
   scheduleText: string;
 }
 
@@ -38,7 +37,6 @@ export const useOpeningHours = (): OpeningHoursStatus => {
 
   return {
     isOpen,
-    statusText: isOpen ? 'Open Now' : 'Closed',
     scheduleText,
   };
 };
