@@ -168,13 +168,10 @@ export const OnlineOrder: React.FC = () => {
     const message = `🔔 NEW ORDER\nName: ${name}\nPhone: ${phone}\nTime: ${formattedTime}\nItems:\n${itemsList}\nTotal: ${totalPrice} ${t("common.uah")}`;
 
     try {
-      const botToken = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
-      const chatId = import.meta.env.VITE_TELEGRAM_CHAT_ID;
-
-      const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+      const response = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chat_id: chatId, text: message, parse_mode: "HTML" }),
+        body: JSON.stringify({ message }),
       });
 
       if (!response.ok) throw new Error("Dispatch failure.");
