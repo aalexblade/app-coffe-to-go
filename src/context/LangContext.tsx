@@ -42,12 +42,11 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
   // Safe memoized functional reference lookup matching translation constraints
   const t = useCallback((path: TranslationPath): string => {
     const keys = path.split('.');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let current: any = translations[language];
+    let current: Record<string, unknown> | string = translations[language];
 
     for (const key of keys) {
-      if (current && typeof current === 'object' && key in current) {
-        current = current[key];
+      if (current && typeof current === 'object' && Object.prototype.hasOwnProperty.call(current, key)) {
+        current = (current as Record<string, unknown>)[key] as Record<string, unknown> | string;
       } else {
         console.warn(`Translation key not found: ${path}`);
         return path;
